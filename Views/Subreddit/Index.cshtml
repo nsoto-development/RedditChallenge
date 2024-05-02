@@ -1,22 +1,20 @@
 @using Reddit.Controllers
 @{
     string? subredditName = ViewData["subredditName"] as string;
-    IEnumerable<Post> posts = ViewData["posts"] as List<Post>;
+    IEnumerable<Post> posts = ViewData["posts"] as List<Post> ?? new List<Post>();
     ViewData["Title"] = "Subreddit Information and Metrics";
 }
 
-<h1>@ViewData["Title"]</h1>
 <section>
-    <h2>@subredditName</h2>
+    <p><h2>@subredditName</h2></p>
     @foreach (var post in posts)
     {
-        <p>
-            <div>
-                <h3>@post.Title</h3>
-                <p>Author: @post.Author</p>
-                <p>Score: @post.Score</p>
+        <div class="post-container">
+            <h3 class="post-title">@post.Title</h3>
+            <div class="post-details">
+                <span class="post-author">Author: @post.Author</span>
+                <span class="post-score">Score: @post.Score</span>
             </div>
-        </p>
-        
+        </div>
     }
 </section>
