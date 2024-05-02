@@ -8,11 +8,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RedditChallenge.styles.css" asp-append-version="true" />
-    <script type="text/javascript">
+    <script>
+        // this begins the justification of a js file
         document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("searchButton").addEventListener("click", function () {
-                var subredditName = document.getElementById("subredditName").value;
-                window.location.href = "/Subreddit/" + subredditName;
+            document.querySelectorAll(".subreddit-search-container").forEach((container) => {
+                container.querySelector("button").addEventListener("click", () => {
+                    var subredditName = container.querySelector("input").value;
+                    window.location.href = "/Subreddit/" + subredditName;
+                });
             });
         });
     </script>
@@ -34,16 +37,16 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Subreddit" asp-action="Index"
-                                asp-route-subredditName="worldnews">Worldnews Stats</a>
+                                asp-route-subredditName="worldnews">Worldnews</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Subreddit" asp-action="Index"
-                                asp-route-subredditName="wallstreetbets">WallStreetBets Stats</a>
+                                asp-route-subredditName="wallstreetbets">WallStreetBets</a>
                         </li>
                         <li class="nav-item">
-                            <input type="text" id="subredditName" name="subredditName"
-                                placeholder="Enter a subreddit name" />
-                            <button id="searchButton" class="btn btn-primary">Search</button>
+                            <li class="nav-item">
+                                <partial name="Components/_SubredditSearch" />
+                            </li>
                         </li>
                     </ul>
                 </div>
@@ -58,7 +61,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - RedditChallenge - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - RedditChallenge
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
