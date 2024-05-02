@@ -21,14 +21,7 @@ namespace RedditChallenge.Controllers
             ViewData["subredditName"] = subredditName;
             ViewData["posts"] = _redditService.GetSubredditPosts(subredditName);
 
-            
-
             return View();
         }
-
-
     }
-
-
-
 }
