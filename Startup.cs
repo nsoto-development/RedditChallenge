@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RedditChallenge.Services.RedditApi;
 using dotenv.net;
+using RedditChallenge.Hubs;
 
 namespace RedditChallenge
 {
@@ -36,6 +37,8 @@ namespace RedditChallenge
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllersWithViews();
+      services.AddSignalR();
+      
       services.AddSingleton<ApiService>(sp =>
       {
           // Retrieve Reddit API credentials from dotenv
@@ -55,18 +58,6 @@ namespace RedditChallenge
       // services.AddWebSocketManager();
 
       // Add other services as needed
-    }
-
-    public void ConfigureRoutes(IEndpointRouteBuilder endpoints)
-    {
-      endpoints.MapControllerRoute(
-        name: "subreddit",
-        pattern: "Subreddit/{subredditName}",
-        defaults: new { controller = "Subreddit", action = "Index" });
-
-      endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -90,6 +81,30 @@ namespace RedditChallenge
       app.UseWebSockets();
       app.UseAuthorization();
 
+
+      app.UseEndpoints(endpoints =>
+      {
+          ConfigureHubs(endpoints);
+          ConfigureRoutes(endpoints);
+      });
+
+    }
+
+    public void ConfigureRoutes(IEndpointRouteBuilder endpoints)
+    {
+      endpoints.MapControllerRoute(
+        name: "subreddit",
+        pattern: "Subreddit/{subredditName}",
+        defaults: new { controller = "Subreddit", action = "Index" });
+
+      endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+    }
+
+    private void ConfigureHubs(IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapHub<PostsHub>("/postsHub");
     }
   }
 }

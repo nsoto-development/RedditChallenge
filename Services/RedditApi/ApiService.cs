@@ -38,16 +38,27 @@ namespace RedditChallenge.Services.RedditApi
 
             return posts ?? Enumerable.Empty<Post>();
         }
-
-        // we need a method that utilized reddit.net monitoring to get posts in real time
-        public void MonitorSubredditPosts(string subredditName, EventHandler<PostsUpdateEventArgs> updateHandler)
+    
+        public async Task<IEnumerable<Post>> FetchNewPostsAsync(string subredditName)
         {
             var subreddit = _redditClient.Subreddit(subredditName);
-            //var posts = subreddit.Posts.GetNew(limit: 10);
 
-            subreddit.Posts.NewUpdated += updateHandler;
+            // Create a task completion source to await the next set of new posts
+            var newPostsTaskCompletionSource = new TaskCompletionSource<IEnumerable<Post>>();
 
-            ArePostsMonitored = subreddit.Posts.MonitorNew();
+            // Define the event handler for the NewUpdated event
+            EventHandler<PostsUpdateEventArgs>? newPostsHandler = null;
+            newPostsHandler = (sender, args) =>
+            {
+                newPostsTaskCompletionSource.SetResult(args.NewPosts);
+            };
+
+            subreddit.Posts.NewUpdated += newPostsHandler;
+
+            subreddit.Posts.MonitorNew();
+
+            // Await the task completion source for the next set of new posts
+            return await newPostsTaskCompletionSource.Task;
         }
     }
 }

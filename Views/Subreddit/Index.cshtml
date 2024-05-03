@@ -1,20 +1,25 @@
-@using Reddit.Controllers
+@using RedditChallenge.Model
+
 @{
     string? subredditName = ViewData["subredditName"] as string;
-    IEnumerable<Post> posts = ViewData["posts"] as List<Post> ?? new List<Post>();
+    PostCollection posts = ViewData["posts"] as PostCollection ?? new PostCollection();
     ViewData["Title"] = "Subreddit Information and Metrics";
 }
 
 <section>
     <p><h2>@subredditName</h2></p>
+    <ol class="post-list">
     @foreach (var post in posts)
     {
-        <div class="post-container">
+        <li class="post-item">
             <h3 class="post-title">@post.Title</h3>
             <div class="post-details">
                 <span class="post-author">Author: @post.Author</span>
                 <span class="post-score">Score: @post.Score</span>
             </div>
-        </div>
+        </li>
     }
+    </ol>
 </section>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/posts.js"></script>

@@ -1,7 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Reddit.Controllers.EventArgs;
-using RedditChallenge.Models;
+
+using RedditChallenge.Model;
 using RedditChallenge.Services.RedditApi;
 
 namespace RedditChallenge.Controllers
@@ -19,7 +18,9 @@ namespace RedditChallenge.Controllers
         {
             // Your logic to retrieve and display metrics for the specified subreddit
             ViewData["subredditName"] = subredditName;
-            ViewData["posts"] = _redditService.GetSubredditPosts(subredditName);
+
+            PostCollection posts = new PostCollection(_redditService.GetSubredditPosts(subredditName));
+            ViewData["posts"] = posts;
 
             return View();
         }
