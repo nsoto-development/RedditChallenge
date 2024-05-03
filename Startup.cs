@@ -10,12 +10,16 @@ namespace RedditChallenge
 {
   public class Startup
   {
-    private readonly IDictionary<string, string> envVars;
     private readonly IConfiguration _configuration;
 
     public Startup(IConfiguration configuration)
     {
       var envVars = DotEnv.Read();
+
+      if (envVars == null)
+      {
+          throw new InvalidOperationException("Failed to read environment variables from .env file.");
+      } 
 
       foreach (var (key, value) in envVars)
       {
@@ -31,7 +35,6 @@ namespace RedditChallenge
 
     public void ConfigureServices(IServiceCollection services)
     {
-      
       services.AddControllersWithViews();
       services.AddSingleton<ApiService>(sp =>
       {
