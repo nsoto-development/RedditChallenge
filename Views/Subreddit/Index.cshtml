@@ -1,25 +1,30 @@
 @using RedditChallenge.Model
 
 @{
-    string? subredditName = ViewData["subredditName"] as string;
-    PostCollection posts = ViewData["posts"] as PostCollection ?? new PostCollection();
-    ViewData["Title"] = "Subreddit Information and Metrics";
+  string? subredditName = ViewData["subredditName"] as string;
+  PostCollection posts = ViewData["posts"] as PostCollection ?? new PostCollection();
+  ViewData["Title"] = "Subreddit Information and Metrics";
 }
 
 <section>
-    <p><h2>@subredditName</h2></p>
-    <ol class="post-list">
+  <p>
+    <h2>@subredditName</h2>
+  </p>
+  <ol class="post-list">
     @foreach (var post in posts)
     {
-        <li class="post-item">
-            <h3 class="post-title">@post.Title</h3>
-            <div class="post-details">
-                <span class="post-author">Author: @post.Author</span>
-                <span class="post-score">Score: @post.Score</span>
-            </div>
-        </li>
+      <li class="post-item">
+        <h3 class="post-title">@post.Title</h3>
+        <div class="post-details">
+          <span class="post-author">Author: @post.Author</span>
+          <span class="post-score">Score: @post.Score</span>
+        </div>
+      </li>
     }
-    </ol>
+  </ol>
 </section>
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
+
+@*
+// this is related to async pushing new posts to client - not implemented yet
 <script src="~/js/posts.js"></script>
+*@

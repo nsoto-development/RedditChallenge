@@ -1,11 +1,7 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using RedditChallenge.Services.RedditApi;
 using dotenv.net;
 using RedditChallenge.Hubs;
+using System.Net.WebSockets;
 
 namespace RedditChallenge
 {
@@ -15,21 +11,21 @@ namespace RedditChallenge
 
     public Startup(IConfiguration configuration)
     {
-      var envVars = DotEnv.Read();
+      IDictionary<string, string> envVars = DotEnv.Read();
 
       if (envVars == null)
       {
-          throw new InvalidOperationException("Failed to read environment variables from .env file.");
-      } 
+        throw new InvalidOperationException("Failed to read environment variables from .env file.");
+      }
 
-      foreach (var (key, value) in envVars)
+      foreach ((string key, string value) in envVars)
       {
-          Environment.SetEnvironmentVariable(key, value);
+        Environment.SetEnvironmentVariable(key, value);
       }
 
       configuration = new ConfigurationBuilder()
-          .AddEnvironmentVariables()
-          .Build();
+        .AddEnvironmentVariables()
+        .Build();
 
       _configuration = configuration;
     }
@@ -38,26 +34,21 @@ namespace RedditChallenge
     {
       services.AddControllersWithViews();
       services.AddSignalR();
-      
+
       services.AddSingleton<ApiService>(sp =>
       {
-          // Retrieve Reddit API credentials from dotenv
-          var clientId = _configuration["REDDIT_CLIENT_ID"] ;
-          var clientSecret = _configuration["REDDIT_CLIENT_SECRET"];
-          var userAgent = _configuration["REDDIT_USER_AGENT"];
+        // Retrieve Reddit API credentials from dotenv
+        string? clientId = _configuration["REDDIT_CLIENT_ID"];
+        string? clientSecret = _configuration["REDDIT_CLIENT_SECRET"];
+        string? userAgent = _configuration["REDDIT_USER_AGENT"];
 
-          if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret) || string.IsNullOrEmpty(userAgent))
-          {
-              throw new InvalidOperationException("Reddit API credentials are missing. Please check your configuration.");
-          }
-          
-          return new ApiService(new HttpClient(), clientId, clientSecret, userAgent);
+        if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret) || string.IsNullOrEmpty(userAgent))
+        {
+          throw new InvalidOperationException("Reddit API credentials are missing. Please check your configuration.");
+        }
+
+        return new ApiService(new HttpClient(), clientId, clientSecret, userAgent);
       });
-
-      // Add WebSocket support
-      // services.AddWebSocketManager();
-
-      // Add other services as needed
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -78,19 +69,53 @@ namespace RedditChallenge
 
       app.UseRouting();
 
-      app.UseWebSockets();
-      app.UseAuthorization();
+      // ConfigureWebsockets(app); is a work in progress and does not work yet
 
+      app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {
-          ConfigureHubs(endpoints);
-          ConfigureRoutes(endpoints);
+        // ConfigureHubs(endpoints); is a work in progress and does not work yet
+        ConfigureRoutes(endpoints);
       });
 
     }
 
-    public void ConfigureRoutes(IEndpointRouteBuilder endpoints)
+    private void ConfigureWebsockets(IApplicationBuilder app)
+    {
+      app.UseWebSockets();
+      app.Use(async (context, next) =>
+      {
+        if (context.Request.Path == "/redditUpdates")
+        {
+          string? subreddit = context.Request.Query["subreddit"];
+          if (!string.IsNullOrEmpty(subreddit))
+          {
+            if (context.WebSockets.IsWebSocketRequest)
+            {
+              ApiService ApiService = app.ApplicationServices.GetRequiredService<ApiService>();
+              WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+              await ApiService.HandleWebSocket(webSocket, subreddit);
+            }
+            else
+            {
+              context.Response.StatusCode = 400;
+            }
+          }
+          else
+          {
+            context.Response.StatusCode = 400;
+            await context.Response.WriteAsync("Subreddit parameter is missing.");
+          }
+        }
+        else
+        {
+          await next();
+        }
+      });
+    }
+
+    private void ConfigureRoutes(IEndpointRouteBuilder endpoints)
     {
       endpoints.MapControllerRoute(
         name: "subreddit",
