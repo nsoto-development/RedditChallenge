@@ -4,24 +4,53 @@
   string? subredditName = ViewData["subredditName"] as string;
   PostCollection posts = ViewData["posts"] as PostCollection ?? new PostCollection();
   ViewData["Title"] = "Subreddit Information and Metrics";
+  string? authorWithMostPosts = ViewData["authorWithMostPosts"] as string;
 }
 
 <section>
-  <p>
-    <h2>@subredditName</h2>
-  </p>
-  <ol class="post-list">
-    @foreach (var post in posts)
-    {
-      <li class="post-item">
-        <h3 class="post-title">@post.Title</h3>
-        <div class="post-details">
-          <span class="post-author">Author: @post.Author</span>
-          <span class="post-score">Score: @post.Score</span>
+
+  <div class="container mb-3">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="subreddit-info">
+          <h1>@subredditName</h2>
+          <ul class="subreddit-stats">
+            <li>Posts Returned: <strong>@posts.Count</strong></li>
+            <li>Total Upvotes: <strong>@posts.Sum(p => p.Upvotes)</strong></li>
+            <li>Total Downvotes: <strong>@posts.Sum(p => p.Downvotes)</strong></li>
+          </ul>
+          <span>Author with most posts: <strong>@authorWithMostPosts</strong></span>
         </div>
-      </li>
-    }
-  </ol>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <ol class="post-list">
+          @foreach (var post in posts)
+          {
+            <li class="post-item">
+              <h3 class="post-title"><a href="http://www.reddit.com/@post.Permalink" target="_blank">@post.Title</a></h3>
+              <div class="post-details">
+                <span class="post-author">Author: @post.Author</span>
+                <span class="post-score">Score: @post.Score</span>
+                <span class="post-upvotes">Upvotes: @post.Upvotes</span>
+                <span class="post-downvotes">Downvotes: @post.Downvotes</span>
+                <div>
+                  <span class="post-created">@post.CreatedAt.ToLongDateString()</span>
+                </div>
+              </div>
+
+            </li>
+          }
+        </ol>
+      </div>
+
+    </div>
+  </div>
+
+
 </section>
 
 @*

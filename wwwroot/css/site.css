@@ -19,10 +19,12 @@ html {
 html {
   position: relative;
   min-height: 100%;
+
 }
 
 body {
   margin-bottom: 60px;
+  background-color: #bdbdbd;
 }
 
 
@@ -41,14 +43,16 @@ body {
 }
 
 .post-item {
-  background-color: #f2f2f2;
+  background-color: #ffffffd7 ;
+  box-shadow: #9c9c9c 0px 0px 10px;
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 5px;
   list-style-type: none;
 }
 
-.post-title {
+.post-title > a {
+  color: #258cfb;
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
@@ -66,4 +70,75 @@ body {
 .post-score {
   font-weight: bold;
   color: #258cfb;
+}
+
+.post-upvotes {
+  font-weight: bold;
+  color: #007700;
+}
+
+.post-downvotes {
+  font-weight: bold;
+  color: #ff6666;
+}
+
+.info {
+  font-weight: bold;
+  color: #258cfb;
+}
+
+nav.navbar {
+  background-color: #0150a3;
+}
+
+.subreddit-info {
+  border: 2px solid #0d2e5223;
+  box-shadow: #0a264486 0px 0px 7px;
+  background-color:  #1a6dc6;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.subreddit-info strong {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.subreddit-info > h1 {
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.gray-text {
+  color: rgb(215, 215, 215);
+}
+
+ul.subreddit-stats {
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 7px;
+}
+
+ul.subreddit-stats > li, .subreddit-info > span {
+  color: rgb(215, 215, 215);
+  margin-right: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.welcome-area {
+  border: 2px solid #0d2e5223;
+  box-shadow: #0a264486 0px 0px 7px;
+  color: white;
+  background-color:  #2c5f96;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 20px;
+
 }

@@ -1,15 +1,23 @@
 ﻿@{
   ViewData["Title"] = "Home Page";
 }
+<div class="container welcome-area">
+  <div class="row justify-content-center">
+    <div class="col-md-12 text-center">
+      <p><h1 class="bold">Welcome to RedditChallenge!</h1></p>
+      <p>RedditChallenge is a simple web application that allows you to view information and metrics about a subreddit.</p>
+      <p>Click on the links above to view information about either of the listed subreddits. </p>
+      <p>Or enter a subreddit name in
+        the search box to view information about that subreddit.</p>
+      <p>For example, enter "worldnews" or "wallstreetbets" in the search box.</p>
+    </div>
+  </div>
 
-<div class="text-center">
-  <h1>Welcome to RedditChallenge!</h1>
-  <p>RedditChallenge is a simple web application that allows you to view information and metrics about a subreddit.</p>
-  <p>Click on the links above to view information about either of the listed subreddits. Or enter a subreddit name in
-    the search box to view information about that subreddit.</p>
-  <p>For example, enter "worldnews" or "wallstreetbets" in the search box.</p>
-
-  <div class="centered-section-sm">
-    <partial name="Components/_SubredditSearch" />
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="centered-section-sm">
+        <partial name="Components/_SubredditSearch" />
+      </div>
+    </div>
   </div>
 </div>

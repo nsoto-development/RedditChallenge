@@ -1,7 +1,5 @@
 using RedditChallenge.Services.RedditApi;
 using dotenv.net;
-using RedditChallenge.Hubs;
-using System.Net.WebSockets;
 
 namespace RedditChallenge
 {
@@ -68,51 +66,9 @@ namespace RedditChallenge
       app.UseStaticFiles();
 
       app.UseRouting();
-
-      // ConfigureWebsockets(app); is a work in progress and does not work yet
-
       app.UseAuthorization();
-
-      app.UseEndpoints(endpoints =>
-      {
-        // ConfigureHubs(endpoints); is a work in progress and does not work yet
-        ConfigureRoutes(endpoints);
-      });
-
-    }
-
-    private void ConfigureWebsockets(IApplicationBuilder app)
-    {
-      app.UseWebSockets();
-      app.Use(async (context, next) =>
-      {
-        if (context.Request.Path == "/redditUpdates")
-        {
-          string? subreddit = context.Request.Query["subreddit"];
-          if (!string.IsNullOrEmpty(subreddit))
-          {
-            if (context.WebSockets.IsWebSocketRequest)
-            {
-              ApiService ApiService = app.ApplicationServices.GetRequiredService<ApiService>();
-              WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-              await ApiService.HandleWebSocket(webSocket, subreddit);
-            }
-            else
-            {
-              context.Response.StatusCode = 400;
-            }
-          }
-          else
-          {
-            context.Response.StatusCode = 400;
-            await context.Response.WriteAsync("Subreddit parameter is missing.");
-          }
-        }
-        else
-        {
-          await next();
-        }
-      });
+      app.UseEndpoints(ConfigureRoutes);
+      // ConfigureWebsockets(app); is a work in progress and does not work yet
     }
 
     private void ConfigureRoutes(IEndpointRouteBuilder endpoints)
@@ -127,9 +83,38 @@ namespace RedditChallenge
         pattern: "{controller=Home}/{action=Index}/{id?}");
     }
 
-    private void ConfigureHubs(IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapHub<PostsHub>("/postsHub");
-    }
+    // private void ConfigureWebsockets(IApplicationBuilder app)
+    // {
+    //   app.UseWebSockets();
+    //   app.Use(async (context, next) =>
+    //   {
+    //     if (context.Request.Path == "/redditUpdates")
+    //     {
+    //       string? subreddit = context.Request.Query["subreddit"];
+    //       if (!string.IsNullOrEmpty(subreddit))
+    //       {
+    //         if (context.WebSockets.IsWebSocketRequest)
+    //         {
+    //           ApiService ApiService = app.ApplicationServices.GetRequiredService<ApiService>();
+    //           WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+    //           await ApiService.HandleWebSocket(webSocket, subreddit);
+    //         }
+    //         else
+    //         {
+    //           context.Response.StatusCode = 400;
+    //         }
+    //       }
+    //       else
+    //       {
+    //         context.Response.StatusCode = 400;
+    //         await context.Response.WriteAsync("Subreddit parameter is missing.");
+    //       }
+    //     }
+    //     else
+    //     {
+    //       await next();
+    //     }
+    //   });
+    // }
   }
 }
