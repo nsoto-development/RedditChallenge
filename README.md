@@ -8,5 +8,6 @@ For the task, I chose asp.net core as it seemed a potentially relevant choice fo
 
 This project utilized dotenv (.env) for configuration/secrets. I'm used to using it with node.js, and was curious to see how easy it would be to also utilize it in this project.
 
-As such, please refer to 'example.env' to supply your reddit credentials for use with the project. After supplying the credentials, please "save as..." and set the new file name to be simply '.env' after saving credentials. In other words, just the file extension 
-'.env' as the entire file name. 
+As such, please refer to 'example.env' to supply your Reddit credentials for use with the project. After supplying the credentials, please "save as..." and set the new file name to be simply '.env' after saving credentials. 
+
+The end result should be a file named '.env' with the Reddit API credentials saved to the root of the project folder: /.env
