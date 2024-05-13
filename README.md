@@ -12,8 +12,7 @@ As such, please refer to 'example.env' to supply your Reddit credentials for use
 
 The end result should be a file named '.env' with the Reddit API credentials saved to the root of the project folder: 
 
-`/.env contents` 
-
+`/.env`:
 ``` ## reddit api credentials
 REDDIT_CLIENT_ID="YOUR CLIENT ID"
 REDDIT_CLIENT_SECRET="YOUR CLIENT SECRET"
