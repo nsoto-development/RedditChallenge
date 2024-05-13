@@ -10,4 +10,12 @@ This project utilized dotenv (.env) for configuration/secrets. I'm used to using
 
 As such, please refer to 'example.env' to supply your Reddit credentials for use with the project. After supplying the credentials, please "save as..." and set the new file name to be simply '.env' after saving credentials. 
 
-The end result should be a file named '.env' with the Reddit API credentials saved to the root of the project folder: /.env
+The end result should be a file named '.env' with the Reddit API credentials saved to the root of the project folder: 
+
+`/.env contents` 
+
+``` ## reddit api credentials
+REDDIT_CLIENT_ID="YOUR CLIENT ID"
+REDDIT_CLIENT_SECRET="YOUR CLIENT SECRET"
+REDDIT_USER_AGENT="ASP.NET Core:DevChallenge:v0.0.1 (by /u/DevChallenge)"
+```
